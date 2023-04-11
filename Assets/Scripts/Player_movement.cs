@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Player_movement : MonoBehaviour
@@ -9,6 +10,7 @@ public class Player_movement : MonoBehaviour
 
 
     private float jumpForce = 8.0f;
+    private float speed = 10.0f;
     private float gravityModifier = 1.5f;
     private float topBounds = 5.0f;
 
@@ -29,10 +31,8 @@ public class Player_movement : MonoBehaviour
         {
             Jump();
         }
-        if (transform.position.y > topBounds)
-        {
-            transform.position = new Vector3(transform.position.x, topBounds, transform.position.z);
-        }
+        Move();
+        
     }
     private void Jump()
     {
@@ -40,16 +40,31 @@ public class Player_movement : MonoBehaviour
         isOnGround = false;
         playerAnim.SetTrigger("Jump_trig");
     }
+    private void Move()
+    {
+        if (Input.GetKey(KeyCode.W))
+        {
+            playerRb.transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            playerRb.transform.Translate(Vector3.right * speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            playerRb.transform.Translate(Vector3.left * speed * Time.deltaTime);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            playerRb.transform.Translate(Vector3.back * speed * Time.deltaTime);
+        }
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
-        }
-        else if (collision.gameObject.CompareTag("Prefabs"))
-        {
-
         }
     }
 }
